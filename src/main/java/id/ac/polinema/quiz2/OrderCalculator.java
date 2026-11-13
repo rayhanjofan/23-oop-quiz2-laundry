@@ -19,8 +19,16 @@ public class OrderCalculator {
      * @param orders daftar pesanan laundry
      * @return jumlah semua harga, atau 0 bila daftar kosong
      */
+
     public static double totalPrice(List<LaundryOrder> orders) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        double total = 0;
+        if (orders == null) {
+            return total;
+        }
+        for (LaundryOrder order : orders) {
+            total += order.calculatePrice();
+        }
+        return total;
     }
 
     /**
@@ -32,7 +40,16 @@ public class OrderCalculator {
      * @return jumlah biaya antar-jemput, atau 0 bila tidak ada yang punya
      */
     public static double totalDelivery(List<LaundryOrder> orders) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        double total = 0;
+        if (orders == null) {
+            return total;
+        }
+        for (LaundryOrder item : orders) {
+            if (item instanceof Deliverable) {
+                total += ((Deliverable) item).deliveryFee();
+            }
+        }
+        return total;
     }
 
     /**
@@ -44,7 +61,9 @@ public class OrderCalculator {
      * @throws InvalidWeightException bila berat tidak valid
      */
     public static void validate(LaundryOrder order) throws InvalidWeightException {
-        throw new UnsupportedOperationException("Not implemented yet");
+        if (order.getWeightKg() <= 0 || order.getWeightKg() > 20) {
+            throw new InvalidWeightException("Invalid weight: " + order.getWeightKg());
+        }
     }
 
     /**
@@ -54,6 +73,11 @@ public class OrderCalculator {
      * @return true bila valid, false bila validate melempar InvalidWeightException
      */
     public static boolean isAcceptable(LaundryOrder order) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        try {
+            validate(order);
+            return true;
+        } catch (InvalidWeightException e) {
+            return false;
+        }
     }
 }
